@@ -19,7 +19,6 @@ export default function Home() {
   const [session] = useSession();
 
   if (!session) return <Login />;
-  const [dataRelaod, setDataRelaod] = useState(true);
 
   const [snapshot] = useCollectionOnce(
     db
@@ -33,15 +32,20 @@ export default function Home() {
   const [input, setInput] = useState("");
   const router = useRouter();
   const createDocument = () => {
-    if (!input) return;
-    db.collection("userDocs").doc(session.user.email).collection("docs").add({
-      filename: input,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    });
-    setDataRelaod(!dataRelaod);
+    if (!input || input === "") return;
+    db.collection("userDocs")
+      .doc(session.user.email)
+      .collection("docs")
+      .add({
+        filename: input,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      })
+      .then((docRef) => {
+        router.push(`/doc/${docRef.id}`);
+      });
+
     setInput("");
     setModalOpen(false);
-    router.reload();
   };
 
   const modal = (
