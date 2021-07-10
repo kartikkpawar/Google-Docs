@@ -39,9 +39,9 @@ export default function Home() {
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
     setDataRelaod(!dataRelaod);
-    router.reload();
     setInput("");
     setModalOpen(false);
+    router.reload();
   };
 
   const modal = (
